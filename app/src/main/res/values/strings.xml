@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ToDo</string>
+    <string name="event_added">Event Added</string>
+    <string name="saved">Saved</string>
+    <string name="navigateback">NavigateBack</string>
+    <string name="add">Add</string>
+    <string name="event">Event</string>
+    <string name="event_description">Event Description</string>
+    <string name="event_duration">Event Duration</string>
+    <string name="edit">Edit</string>
+    <string name="duration_min">Duration:%1$s min</string>
+    <string name="save">Save</string>
+    <string name="event_saved">Event Saved</string>
+    <string name="no_events_todo">No Events ToDo !!</string>
+    <string name="delete">Delete</string>
+    <string name="event_deleted">Event Deleted</string>
+</resources>

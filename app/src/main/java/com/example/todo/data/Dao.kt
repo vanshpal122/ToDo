@@ -20,6 +20,9 @@ interface EventDao {
     @Delete
     suspend fun delete(event: Event)
 
+    @Query("SELECT * FROM Events WHERE heading = :heading")
+    suspend fun getId(heading: String): List<Event>
+
     @Query("SELECT * FROM Events WHERE id = :id")
     fun getEvent(id: Int): Flow<Event>
 

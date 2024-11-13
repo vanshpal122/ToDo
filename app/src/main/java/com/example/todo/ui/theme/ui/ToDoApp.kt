@@ -1,6 +1,7 @@
 package com.example.todo.ui.theme.ui
 
 import android.content.Context
+import android.os.Build
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -22,7 +23,9 @@ import com.example.todo.ui.theme.navigation.ToDoNavigationGraph
 
 @Composable
 fun ToDoApp(navController: NavHostController = rememberNavController(), context: Context) {
-    ToDoNavigationGraph(context, navController = navController)
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        ToDoNavigationGraph(context, navController = navController)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

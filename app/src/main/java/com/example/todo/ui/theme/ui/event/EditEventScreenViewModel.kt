@@ -18,7 +18,7 @@ class EditEventScreenViewModel(
     var eventUiState by mutableStateOf(EventUiState())
         private set
 
-    private val eventId: Int = checkNotNull(savedStateHandle[EditEventScreenDestination.eventId])
+    val eventId: Int = checkNotNull(savedStateHandle[EditEventScreenDestination.eventId])
 
     init {
         viewModelScope.launch {
@@ -28,6 +28,7 @@ class EditEventScreenViewModel(
                 .toEventUiState(true)
         }
     }
+
 
     suspend fun updateEvent() {
         toDoRepository.updateEvent(eventUiState.eventDetails.toEvent())
@@ -40,7 +41,7 @@ class EditEventScreenViewModel(
 
     private fun validateInput(uiState: EventDetails = eventUiState.eventDetails): Boolean {
         return with(uiState) {
-            heading.isNotBlank() && description.isNotBlank() && duration.isNotBlank()
+            heading.isNotBlank() && description.isNotBlank() && duration.isNotBlank() && hour.isNotBlank() && min.isNotBlank()
         }
     }
 }

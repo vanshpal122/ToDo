@@ -1,6 +1,8 @@
 package com.example.todo.ui.theme.navigation
 
 import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -16,6 +18,7 @@ import com.example.todo.ui.theme.ui.event.EventDetailsScreenDestination
 import com.example.todo.ui.theme.ui.homeScreen.CurrentEventScreen
 import com.example.todo.ui.theme.ui.homeScreen.HomeEventScreenDestination
 
+@RequiresApi(Build.VERSION_CODES.S)
 @Composable
 fun ToDoNavigationGraph(context: Context, navController: NavHostController) {
     NavHost(navController = navController, startDestination = HomeEventScreenDestination.name) {

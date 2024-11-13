@@ -21,7 +21,7 @@ class EventDetailsViewModel (
         toDoRepository.deleteEvent(event)
     }
 
-    private val eventId: Int = checkNotNull(savedStateHandle[EventDetailsScreenDestination.eventId])
+    val eventId: Int = checkNotNull(savedStateHandle[EventDetailsScreenDestination.eventId])
     val eventDetailUiState: StateFlow<EventUiState> =
         toDoRepository.getEvent(eventId).filterNotNull()
             .map { EventUiState(eventDetails = it.toEventDetails(), isEntryValid = true)/*EventDetailsUiState(eventId = eventId, eventHeading = it.heading, eventDescription = it.description, eventDuration = it.duration.toString())*/ }

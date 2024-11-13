@@ -23,7 +23,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -49,6 +48,7 @@ import com.example.todo.ui.theme.navigation.NavDestination
 import com.example.todo.ui.theme.theme.ToDoTheme
 import com.example.todo.ui.theme.ui.ToDoTopAppBar
 import com.example.todo.ui.theme.ui.ViewModelProvider
+import com.example.todo.ui.theme.ui.notification.ScheduleNotification
 import kotlinx.coroutines.launch
 
 enum class MenuOptions {
@@ -74,9 +74,9 @@ fun CurrentEventScreen(
     onEditMenuItemClicked: (Int) -> Unit,
     onEventClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: HomeEventScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelProvider.Factory),
+    homeViewModel: HomeEventScreenViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelProvider.Factory),
 ) {
-    val homeUiState by viewModel.homeUiState.collectAsState()
+    val homeUiState by homeViewModel.homeUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
@@ -119,7 +119,8 @@ fun CurrentEventScreen(
                         onDeleteMenuItemClicked = {
                             coroutineScope.launch{
                                 Toast.makeText(context, context!!.getString(R.string.event_deleted), Toast.LENGTH_LONG).show()
-                                viewModel.deleteEvent(it)
+                                ScheduleNotification(context = context).cancelAlarmNotification(it.id)
+                                homeViewModel.deleteEvent(it)
                             }
                                                   },
                         modifier = modifier.fillMaxWidth()
@@ -164,7 +165,11 @@ fun EventCard(onEditMenuItemClicked: () -> Unit, onDeleteMenuItemClicked: () -> 
         Column(modifier = Modifier.padding(8.dp)) {
             Text(text = event.heading, fontWeight = FontWeight.Bold, fontSize = 22.sp)
             Spacer(modifier = Modifier.padding(bottom = 12.dp))
-            Text(text = event.description)
+            var text = event.description
+            if(event.description.length > 12) {
+                text = "${event.description.substring(0, 12)}..."
+            }
+            Text(text = text)
         }
 
         DropdownMenu(expanded = isContextMenuVisible, onDismissRequest = { isContextMenuVisible = false }, offset = pressOffSet.copy(y = pressOffSet.y - itemHeight)) {

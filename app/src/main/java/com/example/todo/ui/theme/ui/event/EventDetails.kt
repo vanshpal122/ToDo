@@ -33,7 +33,7 @@ import com.example.todo.ui.theme.navigation.NavDestination
 import com.example.todo.ui.theme.theme.ToDoTheme
 import com.example.todo.ui.theme.ui.ToDoTopAppBar
 import com.example.todo.ui.theme.ui.ViewModelProvider
-import kotlinx.coroutines.coroutineScope
+import com.example.todo.ui.theme.ui.notification.ScheduleNotification
 import kotlinx.coroutines.launch
 
 
@@ -55,7 +55,7 @@ fun EventDetailsScreen(
     onNavClick: () -> Unit,
     modifier: Modifier = Modifier,
     onEditButtonClicked: (Int) -> Unit,
-    viewModel: EventDetailsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelProvider.Factory),
+    eventDetailsViewModel: EventDetailsViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = ViewModelProvider.Factory),
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
     Scaffold(
@@ -68,20 +68,30 @@ fun EventDetailsScreen(
         }
     ) {
         val coroutine = rememberCoroutineScope()
-        val eventDetailsUiState by viewModel.eventDetailUiState.collectAsState()
+        val eventDetailsUiState by eventDetailsViewModel.eventDetailUiState.collectAsState()
         Column(modifier = modifier
             .fillMaxSize()
             .padding(12.dp)
             .padding(it), verticalArrangement = Arrangement.SpaceBetween) {
             Card {
-                Row(modifier = Modifier.height(40.dp)) {
+                Row(modifier = Modifier.height(52.dp)) {
                     Text(text = eventDetailsUiState.eventDetails.heading, fontSize = 24.sp, modifier = Modifier
                         .align(Alignment.Bottom)
-                        .padding(start = 4.dp))
-                    Text(text = stringResource(R.string.duration_min, eventDetailsUiState.eventDetails.duration), modifier = Modifier
-                        .fillMaxWidth()
-                        .wrapContentWidth(Alignment.End)
-                        .align(Alignment.Bottom))
+                        .padding(start = 4.dp)
+                        .weight(3f))
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .wrapContentWidth(Alignment.End).align(Alignment.Bottom).weight(2f)
+                    ) {
+                        Text(text = "Time: ${eventDetailsUiState.eventDetails.hour}:${padZero(eventDetailsUiState.eventDetails.min.toIntOrNull() ?: 0)} ${eventDetailsUiState.eventDetails.meridiem.name}")
+                        Text(
+                            text = stringResource(
+                                R.string.duration_min,
+                                eventDetailsUiState.eventDetails.duration
+                            )
+                        )
+                    }
                 }
                 HorizontalDivider(thickness = 2.dp, color = Color.Black, modifier = Modifier.padding(bottom = 8.dp))
                 Text(text = eventDetailsUiState.eventDetails.description, modifier = Modifier.padding(8.dp))
@@ -98,9 +108,10 @@ fun EventDetailsScreen(
                 Button(
                     onClick = {
                         coroutine.launch {
-                            onNavClick()
                             Toast.makeText(context, context!!.getString(R.string.event_deleted), Toast.LENGTH_LONG).show()
-                            viewModel.deleteEvent(eventDetailsUiState.eventDetails.toEvent())
+                            ScheduleNotification(context = context).cancelAlarmNotification(eventDetailsViewModel.eventId)
+                            eventDetailsViewModel.deleteEvent(eventDetailsUiState.eventDetails.toEvent())
+                            onNavClick()
                         }
                               },
                     modifier = Modifier

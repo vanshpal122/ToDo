@@ -47,6 +47,7 @@ object EventDetailsScreenDestination: NavDestination {
 
 
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventDetailsScreen(

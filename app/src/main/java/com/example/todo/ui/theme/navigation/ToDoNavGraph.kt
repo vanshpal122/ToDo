@@ -1,6 +1,7 @@
 package com.example.todo.ui.theme.navigation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -9,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.todo.ui.theme.ui.event.AddEventScreen
 import com.example.todo.ui.theme.ui.event.AddEventScreenDestination
 import com.example.todo.ui.theme.ui.event.EditEventScreen
@@ -17,6 +19,8 @@ import com.example.todo.ui.theme.ui.event.EventDetailsScreen
 import com.example.todo.ui.theme.ui.event.EventDetailsScreenDestination
 import com.example.todo.ui.theme.ui.homeScreen.CurrentEventScreen
 import com.example.todo.ui.theme.ui.homeScreen.HomeEventScreenDestination
+
+const val DOMAIN = "eventdetail.com"
 
 @RequiresApi(Build.VERSION_CODES.S)
 @Composable
@@ -35,7 +39,14 @@ fun ToDoNavigationGraph(context: Context, navController: NavHostController) {
             route = EventDetailsScreenDestination.routeWithArgs,
             arguments = listOf(navArgument(EventDetailsScreenDestination.eventId) {
                 type = NavType.IntType
-            })
+            }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "http://$DOMAIN/{${EventDetailsScreenDestination.eventId}}"
+                    action = Intent.ACTION_VIEW
+                }
+            )
         ) {
             EventDetailsScreen(
                 context = context,
